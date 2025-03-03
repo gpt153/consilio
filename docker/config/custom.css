@@ -1,0 +1,23 @@
+/* Custom CSS for Consilio branding */
+
+/* Hide the "FREE EDITION" badge */
+.ProductBrandingTeamEditionContainer .Badge:contains("FREE EDITION") {
+  display: none !important;
+}
+
+/* Add a new badge with "CONSILIO" text */
+.ProductBrandingTeamEditionContainer:after {
+  content: "CONSILIO";
+  display: flex;
+  align-self: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 12px;
+  background: rgba(var(--sidebar-text-rgb), 0.08);
+  color: rgba(var(--sidebar-text-rgb), 0.75);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  line-height: 16px;
+} 

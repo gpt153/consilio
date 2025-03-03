@@ -62,5 +62,27 @@
     "PrivacySettings": {
         "ShowEmailAddress": true,
         "ShowFullName": true
+    },
+    "PluginSettings": {
+        "Enable": true,
+        "EnableUploads": true,
+        "Directory": "./plugins",
+        "ClientDirectory": "./client/plugins",
+        "Plugins": {
+            "consilio-branding": {
+                "Enable": true
+            }
+        }
+    },
+    "ThemeSettings": {
+        "EnableThemeSelection": true,
+        "DefaultTheme": "default",
+        "AllowCustomThemes": true,
+        "AllowedThemes": []
+    },
+    "CustomSettings": {
+        "EnableCustomBranding": true,
+        "CustomBrandText": "Consilio",
+        "CustomCSSUrl": "/custom.css"
     }
 } 

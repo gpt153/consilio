@@ -1,0 +1,18 @@
+{
+  "id": "consilio-branding",
+  "name": "Consilio Branding",
+  "description": "Replaces 'FREE EDITION' with 'CONSILIO' in the UI",
+  "version": "1.0.0",
+  "min_server_version": "5.12.0",
+  "server": {
+    "executable": ""
+  },
+  "webapp": {
+    "bundle_path": "main.js"
+  },
+  "settings_schema": {
+    "header": "Consilio Branding Plugin",
+    "footer": "For more information, visit https://github.com/gpt153/consilio",
+    "settings": []
+  }
+} 

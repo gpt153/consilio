@@ -1,12 +1,27 @@
 FROM golang:1.21 as builder
 
-WORKDIR /mattermost
+# Install necessary build tools
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    jq \
+    nodejs \
+    npm \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up Node.js
+RUN npm install -g yarn
+
+# Set working directory
+WORKDIR /mattermost-src
 
 # Copy the Mattermost source code
-COPY ../mattermost /mattermost
+# Note: This will be copied from the build context during the GitHub Actions workflow
+COPY mattermost/ .
 
 # Build Mattermost
-RUN cd /mattermost && make build-linux
+RUN make build-linux
 
 # Final stage
 FROM ubuntu:22.04
@@ -26,12 +41,12 @@ RUN mkdir -p /mm/data /mm/logs /mm/config /mm/plugins /mm/client/plugins \
     && chown -R mattermost:mattermost /mm
 
 # Copy built artifacts from builder stage
-COPY --from=builder /mattermost/bin/mattermost /mm/
-COPY --from=builder /mattermost/config/config.json /mm/config/
-COPY --from=builder /mattermost/i18n /mm/i18n/
-COPY --from=builder /mattermost/fonts /mm/fonts/
-COPY --from=builder /mattermost/templates /mm/templates/
-COPY --from=builder /mattermost/client /mm/client/
+COPY --from=builder /mattermost-src/bin/mattermost /mm/
+COPY --from=builder /mattermost-src/config/config.json /mm/config/
+COPY --from=builder /mattermost-src/i18n /mm/i18n/
+COPY --from=builder /mattermost-src/fonts /mm/fonts/
+COPY --from=builder /mattermost-src/templates /mm/templates/
+COPY --from=builder /mattermost-src/client /mm/client/
 
 # Add any custom configurations
 COPY ./config/config.json /mm/config/config.json
