@@ -1,7 +1,11 @@
 FROM mattermost/mattermost-team-edition:latest
 
+# Create config directory with proper permissions
+RUN mkdir -p /mm/config && chown -R mattermost:mattermost /mm/config
+
 # Add any custom configurations or plugins here
 COPY ./config/config.json /mm/config/config.json
+RUN chown mattermost:mattermost /mm/config/config.json
 
 # Set environment variables
 ENV MM_SQLSETTINGS_DRIVERNAME=postgres
