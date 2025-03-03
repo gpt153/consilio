@@ -64,10 +64,9 @@ jobs:
       - name: Build and push Consilio image
         uses: docker/build-push-action@v4
         with:
-          context: ./mattermost
+          context: ./docker
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/consilio:${{ env.IMAGE_TAG }}
             ghcr.io/${{ github.repository_owner }}/consilio:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max 
+          cache-from: type=gha 

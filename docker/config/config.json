@@ -1,0 +1,66 @@
+{
+    "ServiceSettings": {
+        "SiteURL": "https://consilio.cc",
+        "ListenAddress": ":8065",
+        "EnableConsole": true,
+        "ConsoleLevel": "DEBUG"
+    },
+    "TeamSettings": {
+        "SiteName": "Consilio",
+        "MaxUsersPerTeam": 50,
+        "EnableUserCreation": true,
+        "EnableOpenServer": true
+    },
+    "SqlSettings": {
+        "DriverName": "postgres",
+        "DataSource": "postgres://mmuser:mmuser_password@co-postgres:5432/mattermost?sslmode=disable",
+        "MaxIdleConns": 20,
+        "MaxOpenConns": 300,
+        "Trace": false,
+        "AtRestEncryptKey": ""
+    },
+    "LogSettings": {
+        "EnableConsole": true,
+        "ConsoleLevel": "DEBUG",
+        "EnableFile": true,
+        "FileLevel": "INFO",
+        "FileLocation": ""
+    },
+    "FileSettings": {
+        "MaxFileSize": 52428800,
+        "DriverName": "local",
+        "Directory": "./data/",
+        "EnablePublicLink": false,
+        "PublicLinkSalt": ""
+    },
+    "EmailSettings": {
+        "EnableSignUpWithEmail": true,
+        "EnableSignInWithEmail": true,
+        "EnableSignInWithUsername": true,
+        "SendEmailNotifications": false,
+        "RequireEmailVerification": false,
+        "FeedbackName": "Consilio Feedback",
+        "FeedbackEmail": "feedback@consilio.cc",
+        "SMTPUsername": "",
+        "SMTPPassword": "",
+        "SMTPServer": "",
+        "SMTPPort": "",
+        "ConnectionSecurity": "",
+        "InviteSalt": "",
+        "PasswordResetSalt": "",
+        "SendPushNotifications": false,
+        "PushNotificationServer": ""
+    },
+    "RateLimitSettings": {
+        "Enable": false,
+        "PerSec": 10,
+        "MaxBurst": 100,
+        "MemoryStoreSize": 10000,
+        "VaryByRemoteAddr": true,
+        "VaryByHeader": ""
+    },
+    "PrivacySettings": {
+        "ShowEmailAddress": true,
+        "ShowFullName": true
+    }
+} 
