@@ -1,8 +1,23 @@
-# Consilio CI/CD Pipeline
+# Consilio
+
+Consilio is a custom implementation built on top of Mattermost, providing enhanced collaboration features.
+
+## Repository Structure
+
+This monorepo contains all Consilio components:
+
+- `webapp/`: Web application frontend
+- `desktop/`: Desktop application customizations
+- `mobile/`: Mobile application customizations
+- `shared/`: Shared code, utilities, and components
+- `docs/`: Documentation
+- `.github/workflows/`: CI/CD pipeline configuration
+
+## CI/CD Pipeline
 
 This repository contains the CI/CD pipeline configuration for the Consilio application. The pipeline automates the process of building Docker containers, pushing them to GitHub Container Registry, and deploying them to the production environment at consilio.cc.
 
-## Development Environment
+### Development Environment
 
 The development environment is set up using Docker Compose. To start the development environment, run:
 
@@ -11,27 +26,12 @@ cd consilio-dev
 docker-compose up -d
 ```
 
-## CI/CD Pipeline
+### CI/CD Workflow
 
 The CI/CD pipeline is implemented using GitHub Actions. The pipeline consists of two workflows:
 
 1. **Build and Push Docker Image**: This workflow builds the Docker image and pushes it to GitHub Container Registry.
 2. **Deploy to Production**: This workflow deploys the Docker image to the production environment.
-
-### Setting Up GitHub Repository
-
-1. Create a new GitHub repository for your project.
-2. Push your code to the repository:
-
-```bash
-cd consilio-dev
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/your-username/consilio.git
-git push -u origin main
-```
 
 ### Setting Up GitHub Secrets
 
@@ -122,6 +122,27 @@ If you encounter any issues with the deployment, check the following:
 3. Check the Docker logs on the production server.
 4. Verify that the SSL certificates are correctly configured.
 
+## Getting Started with Development
+
+### Prerequisites
+
+- Node.js (v18+)
+- npm or yarn
+- Go (1.22+)
+- Docker and Docker Compose
+
+### Development Setup
+
+1. Clone this repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Start the development environment:
+   ```
+   npm run dev
+   ```
+
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+This project is licensed under the MIT License - see the LICENSE file for details.

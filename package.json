@@ -1,0 +1,45 @@
+{
+  "name": "consilio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Consilio - Enhanced collaboration platform built on Mattermost",
+  "workspaces": [
+    "webapp",
+    "desktop",
+    "mobile",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "npm run dev:webapp",
+    "dev:webapp": "cd webapp && npm run dev",
+    "build": "npm run build:webapp",
+    "build:webapp": "cd webapp && npm run build",
+    "test": "npm run test:webapp",
+    "test:webapp": "cd webapp && npm run test",
+    "lint": "npm run lint:webapp",
+    "lint:webapp": "cd webapp && npm run lint"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/consilio.git"
+  },
+  "keywords": [
+    "mattermost",
+    "collaboration",
+    "messaging"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/consilio/issues"
+  },
+  "homepage": "https://github.com/yourusername/consilio#readme",
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.2"
+  }
+} 
