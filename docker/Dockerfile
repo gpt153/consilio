@@ -1,9 +1,39 @@
-FROM mattermost/mattermost-team-edition:latest
+FROM golang:1.21 as builder
 
-# Create config directory with proper permissions
-RUN mkdir -p /mm/config && chown -R mattermost:mattermost /mm/config
+WORKDIR /mattermost
 
-# Add any custom configurations or plugins here
+# Copy the Mattermost source code
+COPY ../mattermost /mattermost
+
+# Build Mattermost
+RUN cd /mattermost && make build-linux
+
+# Final stage
+FROM ubuntu:22.04
+
+# Install dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    jq \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create mattermost user and group
+RUN groupadd -r mattermost && useradd -r -g mattermost mattermost
+
+# Create necessary directories with proper permissions
+RUN mkdir -p /mm/data /mm/logs /mm/config /mm/plugins /mm/client/plugins \
+    && chown -R mattermost:mattermost /mm
+
+# Copy built artifacts from builder stage
+COPY --from=builder /mattermost/bin/mattermost /mm/
+COPY --from=builder /mattermost/config/config.json /mm/config/
+COPY --from=builder /mattermost/i18n /mm/i18n/
+COPY --from=builder /mattermost/fonts /mm/fonts/
+COPY --from=builder /mattermost/templates /mm/templates/
+COPY --from=builder /mattermost/client /mm/client/
+
+# Add any custom configurations
 COPY ./config/config.json /mm/config/config.json
 RUN chown mattermost:mattermost /mm/config/config.json
 
@@ -18,5 +48,8 @@ EXPOSE 8065
 # Set the working directory
 WORKDIR /mm
 
+# Switch to mattermost user
+USER mattermost
+
 # Start Mattermost
-CMD ["mattermost", "server"] 
+CMD ["./mattermost"] 
