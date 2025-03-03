@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  co-postgres:
+    image: postgres:15-alpine
+    container_name: co-postgres-1
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - co-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  mattermost:
+    image: mattermost/mattermost-team-edition:latest
+    container_name: co-mattermost-1
+    ports:
+      - "8066:8065"
+    environment:
+      MM_SQLSETTINGS_DRIVERNAME: postgres
+      MM_SQLSETTINGS_DATASOURCE: postgres://mmuser:mmuser_password@co-postgres:5432/mattermost_dev?sslmode=disable
+      MM_USERNAME: admin
+      MM_PASSWORD: admin_password
+      MM_EMAILSETTINGS_SMTPSERVER: mailhog
+      MM_EMAILSETTINGS_SMTPPORT: 1025
+      MM_EMAILSETTINGS_ENABLESMTPAUTH: "false"
+      MM_EMAILSETTINGS_ENABLESECURESMTPCONNECTION: "false"
+      MM_EMAILSETTINGS_SKIPSERVERCERTIFICATEVALIDATION: "true"
+      MM_EMAILSETTINGS_FEEDBACKEMAIL: feedback@example.com
+      MM_EMAILSETTINGS_REPLYTOADDRESS: noreply@example.com
+      MM_EMAILSETTINGS_SENDEMAILNOTIFICATIONS: "true"
+      MM_LOGSETTINGS_CONSOLELEVEL: DEBUG
+    depends_on:
+      - co-postgres
+    restart: unless-stopped
+
+volumes:
+  co-postgres-data: 

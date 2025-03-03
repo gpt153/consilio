@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+  co-postgres:
+    image: postgres:15-alpine
+    container_name: co-postgres-prod
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: postgres
+    volumes:
+      - co-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - consilio-network
+
+  consilio:
+    image: ghcr.io/${GITHUB_USERNAME}/consilio:latest
+    container_name: consilio
+    ports:
+      - "8065:8065"
+    environment:
+      MM_SQLSETTINGS_DRIVERNAME: postgres
+      MM_SQLSETTINGS_DATASOURCE: postgres://mmuser:${MMUSER_PASSWORD}@co-postgres:5432/mattermost?sslmode=disable
+    volumes:
+      - mattermost-data:/mm/data
+      - mattermost-logs:/mm/logs
+      - mattermost-config:/mm/config
+      - mattermost-plugins:/mm/plugins
+      - mattermost-client-plugins:/mm/client/plugins
+    depends_on:
+      - co-postgres
+    restart: unless-stopped
+    networks:
+      - consilio-network
+
+  nginx:
+    image: nginx:latest
+    container_name: co-nginx-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/www:/var/www/html
+    depends_on:
+      - consilio
+    restart: unless-stopped
+    networks:
+      - consilio-network
+
+volumes:
+  co-postgres-data:
+  mattermost-data:
+  mattermost-logs:
+  mattermost-config:
+  mattermost-plugins:
+  mattermost-client-plugins:
+
+networks:
+  consilio-network:
+    driver: bridge 
