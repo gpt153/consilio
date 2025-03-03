@@ -33,6 +33,24 @@ The CI/CD pipeline is implemented using GitHub Actions. The pipeline consists of
 1. **Build and Push Docker Image**: This workflow builds the Docker image and pushes it to GitHub Container Registry.
 2. **Deploy to Production**: This workflow deploys the Docker image to the production environment.
 
+#### Automated Workflow
+
+The CI/CD pipeline is fully automated:
+
+1. When code is pushed to the `main` branch, the build workflow automatically triggers.
+2. After a successful build, the deployment workflow automatically triggers and deploys to production.
+
+#### Manual Workflow
+
+You can also manually trigger the workflows:
+
+1. Go to your GitHub repository.
+2. Click on "Actions" > "Build and Push Docker Image".
+3. Click on "Run workflow".
+4. Enter the tag for the Docker image (e.g., "latest" or a version number).
+5. Select the deployment environment (production or staging).
+6. Click on "Run workflow".
+
 ### Setting Up GitHub Secrets
 
 You need to set up the following secrets in your GitHub repository:

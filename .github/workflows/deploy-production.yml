@@ -1,20 +1,43 @@
 name: Deploy to Production
 
 on:
+  # Automatically trigger after build workflow completes
   workflow_run:
     workflows: ["Build and Push Docker Image"]
     types:
       - completed
     branches:
       - main
+  
+  # Keep manual trigger option
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Image tag to deploy'
+        required: true
+        default: 'latest'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.inputs.environment == 'production' }}
+    # Only run if the build workflow succeeded or this is a manual trigger
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     
     steps:
-      - name: Deploy to production server
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set tag based on trigger type
+      - name: Set tag for auto trigger
+        if: github.event_name == 'workflow_run'
+        run: echo "DEPLOY_TAG=latest" >> $GITHUB_ENV
+
+      # Set tag based on manual input
+      - name: Set tag for manual trigger
+        if: github.event_name == 'workflow_dispatch'
+        run: echo "DEPLOY_TAG=${{ github.event.inputs.tag }}" >> $GITHUB_ENV
+
+      - name: Deploy to production
         uses: appleboy/ssh-action@master
         with:
           host: consilio.cc
@@ -22,6 +45,7 @@ jobs:
           key: ${{ secrets.PROD_SSH_KEY }}
           script: |
             cd /home/samuel/consilio
+            echo "CONSILIO_IMAGE=ghcr.io/${{ github.repository_owner }}/consilio:${{ env.DEPLOY_TAG }}" > .env.deploy
             docker-compose pull
             docker-compose up -d
-            docker system prune -af 
+            docker image prune -f 

@@ -1,6 +1,16 @@
 name: Build and Push Docker Image
 
 on:
+  # Automatically trigger on push to main branch
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - '.github/**'
+      - '!.github/workflows/docker-build-push.yml'
+  
+  # Keep manual trigger option
   workflow_dispatch:
     inputs:
       tag:
@@ -37,13 +47,27 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Set tag based on trigger type
+      - name: Set tag for auto trigger
+        if: github.event_name == 'push'
+        run: |
+          echo "IMAGE_TAG=latest" >> $GITHUB_ENV
+          echo "DEPLOY_ENV=production" >> $GITHUB_ENV
+
+      # Set tag based on manual input
+      - name: Set tag for manual trigger
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "IMAGE_TAG=${{ github.event.inputs.tag }}" >> $GITHUB_ENV
+          echo "DEPLOY_ENV=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+
       - name: Build and push Consilio image
         uses: docker/build-push-action@v4
         with:
           context: ./mattermost
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/consilio:${{ github.event.inputs.tag }}
-            ghcr.io/${{ github.repository_owner }}/consilio:latest
+            ghcr.io/${{ github.repository_owner }}/consilio:${{ env.IMAGE_TAG }}
+            ghcr.io/${{ github.repository_owner }}/consilio:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max 
