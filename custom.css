@@ -1,32 +1,48 @@
-/* Hide the FREE EDITION badge */
-.ProductBrandingTeamEdition__badge {
+/* Hide the "FREE EDITION" badge */
+.ProductBrandingTeamEditionBadge {
     display: none !important;
 }
 
-/* Replace Mattermost logo with Consilio text */
-.ProductBrandingTeamEdition__container svg {
-    display: none !important;
+/* Style the Consilio logo */
+.ProductBrandingTeamEditionContainer svg {
+    fill: rgba(var(--sidebar-text-rgb), 0.9) !important;
 }
 
-.ProductBrandingTeamEdition__container::before {
+/* Add custom styling for the header */
+.SidebarHeaderContainer {
+    padding: 0 !important;
+}
+
+/* Ensure the logo is properly sized */
+.ProductBrandingTeamEditionContainer svg {
+    width: 120px !important;
+    height: 20px !important;
+}
+
+/* Add some spacing around the logo */
+.ProductBrandingTeamEditionContainer {
+    padding: 0 16px !important;
+}
+
+/* Adjust the sidebar header height */
+.SidebarHeader {
+    height: 52px !important;
+}
+
+/* Ensure the logo is centered vertically */
+.ProductBrandingTeamEditionContainer {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+}
+
+/* Fallback text in case SVG doesn't load */
+.ProductBrandingTeamEditionContainer:empty::before {
     content: "CONSILIO";
-    display: inline-block;
     font-family: 'Open Sans', sans-serif;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
-    color: rgba(var(--sidebar-text-rgb), 0.75);
-    letter-spacing: 0.025em;
+    color: rgba(var(--sidebar-text-rgb), 0.9);
+    letter-spacing: 1px;
     line-height: 20px;
-}
-
-/* Add a badge after the logo */
-.ProductBrandingTeamEdition__container::after {
-    content: "";
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #339970;
-    margin-left: 8px;
-    vertical-align: middle;
 } 

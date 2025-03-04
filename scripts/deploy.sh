@@ -1,63 +1,64 @@
 #!/bin/bash
 
-# Script to push changes to GitHub and trigger the CI/CD pipeline
-
-# Colors for output
+# Colors for terminal output
 GREEN='\033[0;32m'
+RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-echo -e "${YELLOW}Consilio Deployment Script${NC}"
-echo "This script will push your changes to GitHub and trigger the CI/CD pipeline."
-echo ""
+# Function to print colored messages
+print_message() {
+    echo -e "${2}${1}${NC}"
+}
 
 # Check if we're in a git repository
-if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-  echo "Error: Not in a git repository. Please run this script from the root of the Consilio repository."
-  exit 1
+if [ ! -d ".git" ]; then
+    print_message "Error: Not a git repository. Please run this script from the root of the consilio-dev repository." "$RED"
+    exit 1
 fi
 
-# Check if there are any changes to commit
+# Check if there are changes to commit
 if [ -z "$(git status --porcelain)" ]; then
-  echo "No changes to commit. Do you want to push anyway? (y/n)"
-  read -r answer
-  if [ "$answer" != "y" ]; then
-    echo "Deployment cancelled."
+    print_message "No changes to commit. Exiting." "$YELLOW"
     exit 0
-  fi
-else
-  # Show changes
-  echo -e "${YELLOW}Changes to be committed:${NC}"
-  git status -s
-  echo ""
-  
-  # Ask for commit message
-  echo "Enter commit message:"
-  read -r commit_message
-  
-  # Commit changes
-  git add .
-  git commit -m "$commit_message"
-  
-  if [ $? -ne 0 ]; then
-    echo "Error: Failed to commit changes."
-    exit 1
-  fi
-  
-  echo -e "${GREEN}Changes committed successfully.${NC}"
 fi
+
+# Show the changes that will be committed
+print_message "The following changes will be committed:" "$GREEN"
+git status --short
+
+# Ask for confirmation
+read -p "Do you want to continue? (y/n) " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    print_message "Deployment cancelled." "$YELLOW"
+    exit 0
+fi
+
+# Ask for commit message
+echo
+read -p "Enter commit message: " commit_message
+if [ -z "$commit_message" ]; then
+    commit_message="Update Consilio branding"
+fi
+
+# Add all changes
+print_message "Adding changes..." "$GREEN"
+git add .
+
+# Commit changes
+print_message "Committing changes..." "$GREEN"
+git commit -m "$commit_message"
 
 # Push to GitHub
-echo "Pushing to GitHub..."
-git push -u origin main
-
-if [ $? -ne 0 ]; then
-  echo "Error: Failed to push to GitHub."
-  exit 1
+print_message "Pushing to GitHub..." "$GREEN"
+if git push origin main; then
+    print_message "Successfully pushed to GitHub!" "$GREEN"
+    print_message "Check the CI/CD pipeline status at: https://github.com/gpt153/consilio/actions" "$GREEN"
+    print_message "Your changes will be deployed automatically once the pipeline completes." "$GREEN"
+else
+    print_message "Failed to push to GitHub. Please check your connection and try again." "$RED"
+    exit 1
 fi
-
-echo -e "${GREEN}Changes pushed to GitHub successfully.${NC}"
-echo "The CI/CD pipeline has been triggered."
-echo "You can check the status of the pipeline at: https://github.com/$(git config --get remote.origin.url | sed 's/.*github.com[:\/]\(.*\)\.git/\1/')/actions"
 
 exit 0 

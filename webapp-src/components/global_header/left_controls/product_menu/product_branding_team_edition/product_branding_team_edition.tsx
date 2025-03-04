@@ -4,32 +4,27 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import ConsilioLogo from 'components/common/svg_images_components/consilio_logo';
+import ConsilioLogo from '../../../../common/svg_images_components/consilio_logo';
 
-const ProductBrandingTeamEditionContainer = styled.span`
+const Container = styled.div`
     display: flex;
     align-items: center;
-
-    > * + * {
-        margin-left: 8px;
-    }
+    height: 100%;
+    padding: 0 16px;
 `;
 
-const StyledLogo = styled(ConsilioLogo)`
-    path {
-        fill: rgba(var(--sidebar-text-rgb), 0.75);
-    }
+const LogoWrapper = styled.div`
+    display: flex;
+    width: 120px;
+    height: 20px;
 `;
 
-const ProductBrandingTeamEdition = (): JSX.Element => {
+export default function ProductBrandingTeamEdition() {
     return (
-        <ProductBrandingTeamEditionContainer tabIndex={-1}>
-            <StyledLogo
-                width={116}
-                height={20}
-            />
-        </ProductBrandingTeamEditionContainer>
+        <Container>
+            <LogoWrapper>
+                <ConsilioLogo width={120} height={20} />
+            </LogoWrapper>
+        </Container>
     );
-};
-
-export default ProductBrandingTeamEdition;
+}
