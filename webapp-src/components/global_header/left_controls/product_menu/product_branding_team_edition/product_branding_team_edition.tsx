@@ -4,7 +4,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Logo from 'components/common/svg_images_components/logo_dark_blue_svg';
+import ConsilioLogo from 'components/common/svg_images_components/consilio_logo';
 
 const ProductBrandingTeamEditionContainer = styled.span`
     display: flex;
@@ -15,25 +15,10 @@ const ProductBrandingTeamEditionContainer = styled.span`
     }
 `;
 
-const StyledLogo = styled(Logo)`
+const StyledLogo = styled(ConsilioLogo)`
     path {
         fill: rgba(var(--sidebar-text-rgb), 0.75);
     }
-`;
-
-const Badge = styled.span`
-    display: flex;
-    align-self: center;
-    padding: 2px 6px;
-    border-radius: var(--radius-s);
-    margin-left: 12px;
-    background: rgba(var(--sidebar-text-rgb), 0.08);
-    color: rgba(var(--sidebar-text-rgb), 0.75);
-    font-family: 'Open Sans', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.025em;
-    line-height: 16px;
 `;
 
 const ProductBrandingTeamEdition = (): JSX.Element => {
@@ -43,7 +28,6 @@ const ProductBrandingTeamEdition = (): JSX.Element => {
                 width={116}
                 height={20}
             />
-            <Badge>{'CONSILIO'}</Badge>
         </ProductBrandingTeamEditionContainer>
     );
 };

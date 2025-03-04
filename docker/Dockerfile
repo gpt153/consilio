@@ -6,8 +6,12 @@ USER root
 # Copy custom CSS file
 COPY ./custom.css /mm/client/
 
+# Copy custom logo files
+COPY ./webapp-src/components/common/svg_images_components/consilio_logo.tsx /mm/client/components/common/svg_images_components/
+COPY ./webapp-src/components/global_header/left_controls/product_menu/product_branding_team_edition/product_branding_team_edition.tsx /mm/client/components/global_header/left_controls/product_menu/product_branding_team_edition/
+
 # Set proper permissions
-RUN chown -R mattermost:mattermost /mm/client/custom.css
+RUN chown -R mattermost:mattermost /mm/client/
 
 # Set environment variables
 ENV MM_SQLSETTINGS_DRIVERNAME=postgres
