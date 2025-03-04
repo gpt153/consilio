@@ -3,14 +3,11 @@ FROM mattermost/mattermost-team-edition:latest
 # Switch to root for modifications
 USER root
 
-# Copy our custom config
-COPY ./config/config.json /mm/config/config.json
-
 # Copy custom CSS file
 COPY ./custom.css /mm/client/
 
 # Set proper permissions
-RUN chown mattermost:mattermost /mm/config/config.json /mm/client/custom.css
+RUN chown -R mattermost:mattermost /mm/client/custom.css
 
 # Set environment variables
 ENV MM_SQLSETTINGS_DRIVERNAME=postgres
