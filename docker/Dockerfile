@@ -1,40 +1,27 @@
-FROM node:16 as webapp-builder
-
-# Install necessary build tools
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-# Set working directory
-WORKDIR /mattermost-webapp
-
-# Copy the Mattermost webapp source code
-COPY mattermost/webapp/ .
-
-# Install dependencies and build the webapp
-RUN npm install
-RUN npm run build
-
-# Use the official Mattermost image as base for the final image
 FROM mattermost/mattermost-team-edition:latest
 
-# Copy the built webapp over the existing one
-COPY --from=webapp-builder /mattermost-webapp/dist /mm/client
+# Create necessary directories
+USER root
+RUN mkdir -p /mm/customizations
+WORKDIR /mm/customizations
 
-# Add any custom configurations
+# Copy our customization files
+COPY ./customizations/ /mm/customizations/
+
+# Copy our custom config
 COPY ./config/config.json /mm/config/config.json
 RUN chown mattermost:mattermost /mm/config/config.json
+
+# Apply customizations
+RUN cp -f /mm/customizations/components/global_header/left_controls/product_menu/product_branding_team_edition/product_branding_team_edition.tsx /mm/client/components/global_header/left_controls/product_menu/product_branding_team_edition/product_branding_team_edition.tsx
 
 # Set environment variables
 ENV MM_SQLSETTINGS_DRIVERNAME=postgres
 ENV MM_SQLSETTINGS_DATASOURCE=postgres://mmuser:mmuser_password@consilio-postgres:5432/mattermost?sslmode=disable
 ENV MM_LOGSETTINGS_CONSOLELEVEL=DEBUG
 
-# Expose the default Mattermost port
-EXPOSE 8065
-
-# Set the working directory
+# Switch back to mattermost user
+USER mattermost
 WORKDIR /mm
 
 # Start Mattermost
